@@ -109,6 +109,7 @@ func run(ctx context.Context, o opts) error {
 		Handler: mux,
 	}
 	go func() {
+		log.Info("Starting server", zap.String("address", server.Addr))
 		if err := server.ListenAndServe(); err != nil {
 			log.Error("failed to run server", zap.Error(err))
 		}
@@ -122,6 +123,7 @@ func run(ctx context.Context, o opts) error {
 				log.Error("failed to fetch data", zap.String("name", item.Name), zap.Error(err))
 				continue
 			}
+			log.Info("Successfully fetched data", zap.String("name", item.Name), zap.String("address", item.Address))
 			powerMetric.WithLabelValues(item.Name).Set(resp.Power)
 			voltageMetric.WithLabelValues(item.Name).Set(resp.Voltage)
 			currentMetric.WithLabelValues(item.Name).Set(resp.Current)
