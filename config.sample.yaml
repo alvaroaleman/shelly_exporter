@@ -1,0 +1,4 @@
+- name: lamp
+  address: http://192.168.178.12
+- name: vacuum
+  address: http://192.168.178.13
