@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: shelly-exporter
+  name: shelly-exporter
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shelly-exporter
+  template:
+    metadata:
+      labels:
+        app: shelly-exporter
+      annotations:
+       prometheus.io/scrape: "true"
+       prometheus.io/port: "9090"
+       config.yaml: |
+        - name: lamp
+          address: http://192.168.178.12
+        - name: vacuum
+          address: http://192.168.178.13
+    spec:
+      containers:
+      - image: ghcr.io/alvaroaleman/shelly_exporter:latest
+        name: shelly-exporter
+        args:
+        - --config=/etc/shelly/config.yaml
+        volumeMounts:
+        - mountPath: /etc/shelly
+          name: config
+      volumes:
+      - name: config
+        downwardAPI:
+          items:
+          - path: config.yaml
+            fieldRef:
+              fieldPath: metadata.annotations['config.yaml']
+

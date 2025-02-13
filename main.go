@@ -23,7 +23,7 @@ type opts struct {
 func main() {
 	var o opts
 	cmd := &cobra.Command{}
-	cmd.Flags().StringVar(&o.configFile, "config-file", "config.yaml", "Path to the config file")
+	cmd.Flags().StringVar(&o.configFile, "config", "config.yaml", "Path to the config file")
 
 	cmd.RunE = func(cmd *cobra.Command, args []string) error {
 		return run(cmd.Context(), o)
@@ -133,7 +133,7 @@ func run(ctx context.Context, o opts) error {
 		select {
 		case <-ctx.Done():
 			return nil
-		case <-time.After(30 * time.Second):
+		case <-time.After(15 * time.Second):
 		}
 	}
 }
